@@ -37,6 +37,8 @@ mcp = FastMCP(
         "Use this server for live public order book and pricing reads. "
         "Do not use it for market discovery or wallet analytics."
     ),
+    mask_error_details=True,
+    strict_input_validation=True,
 )
 
 

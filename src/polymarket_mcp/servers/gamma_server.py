@@ -43,6 +43,8 @@ mcp = FastMCP(
         "slug, or category. Do not use this server for live order book pricing "
         "or trading actions."
     ),
+    mask_error_details=True,
+    strict_input_validation=True,
 )
 
 
