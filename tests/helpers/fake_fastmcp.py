@@ -139,14 +139,14 @@ class FakeResourcesAsTools:
         self.server = server
 
 
-def install_fake_fastmcp() -> types.ModuleType:
-    """Install fake ``fastmcp`` modules into ``sys.modules``.
+def build_fake_fastmcp_modules() -> dict[str, types.ModuleType]:
+    """Build fake ``fastmcp`` modules for tests.
 
     Args:
         None.
 
     Returns:
-        types.ModuleType: Injected root fake ``fastmcp`` module.
+        dict[str, types.ModuleType]: Fake modules keyed by import path.
 
     Raises:
         None.
@@ -156,7 +156,27 @@ def install_fake_fastmcp() -> types.ModuleType:
     server_module = types.ModuleType("fastmcp.server")
     transforms_module = types.ModuleType("fastmcp.server.transforms")
     transforms_module.ResourcesAsTools = FakeResourcesAsTools
-    sys.modules.setdefault("fastmcp", fastmcp_module)
-    sys.modules.setdefault("fastmcp.server", server_module)
-    sys.modules.setdefault("fastmcp.server.transforms", transforms_module)
-    return fastmcp_module
+    return {
+        "fastmcp": fastmcp_module,
+        "fastmcp.server": server_module,
+        "fastmcp.server.transforms": transforms_module,
+    }
+
+
+def install_fake_fastmcp(*, force: bool = False) -> types.ModuleType:
+    """Install fake ``fastmcp`` modules into ``sys.modules``.
+
+    Args:
+        force: Replace any existing ``fastmcp`` modules when ``True``.
+
+    Returns:
+        types.ModuleType: Injected root fake ``fastmcp`` module.
+
+    Raises:
+        None.
+    """
+    modules = build_fake_fastmcp_modules()
+    for module_name, module in modules.items():
+        if force or module_name not in sys.modules:
+            sys.modules[module_name] = module
+    return sys.modules["fastmcp"]
