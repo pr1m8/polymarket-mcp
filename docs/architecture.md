@@ -20,6 +20,14 @@ The package is built in three layers.
 
 The parent server in `src/polymarket_mcp/server.py` mounts those child servers into one composed `polymarket` surface.
 
+## Namespace boundaries
+
+| Namespace | Backing module | Upstream concern |
+| --- | --- | --- |
+| `gamma` | `servers/gamma_server.py` | discovery and event metadata |
+| `data` | `servers/data_server.py` | wallet positions and activity |
+| `clob` | `servers/clob_public_server.py` | public order books and quotes |
+
 ## Request flow
 
 ```text

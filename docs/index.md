@@ -2,7 +2,7 @@
 
 `polymarket-mcp` exposes a typed FastMCP surface over Polymarket discovery, wallet reads, and public CLOB market data.
 
-## Why this package exists
+## At a glance
 
 - Normalize volatile upstream JSON into stable typed models.
 - Present Polymarket as clear MCP tools and resources.
@@ -17,6 +17,12 @@
 | `data` | inspect wallet state and history | summarize positions or trades |
 | `clob` | read live books, quotes, and history | compare pricing and liquidity |
 
+## Package identities
+
+- Distribution: `polymarket-mcp-server`
+- Import package: `polymarket_mcp`
+- CLI entrypoint: `polymarket-mcp`
+
 ```{toctree}
 :maxdepth: 2
 :caption: Guides
@@ -24,5 +30,6 @@
 usage
 architecture
 development
+release
 api
 ```

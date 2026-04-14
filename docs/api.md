@@ -1,5 +1,7 @@
 # API reference
 
+This reference is organized by layer: composition and settings first, then the domain-specific models, service adapters, and exposed MCP servers.
+
 ## Package and composition
 
 ```{automodule} polymarket_mcp

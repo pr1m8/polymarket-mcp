@@ -14,7 +14,14 @@ PyPI distribution: `polymarket-mcp-server`
 Python package: `polymarket_mcp`  
 CLI command: `polymarket-mcp`
 
-## What you get
+## Why use it
+
+- Stable typed models over inconsistent upstream JSON.
+- A single composed MCP server with clear `gamma`, `data`, and `clob` namespaces.
+- Real MCP transport coverage in pytest, including subprocess stdio tests.
+- Local PDM workflow plus trusted publishing to PyPI and Read the Docs support.
+
+## Surfaces
 
 | Surface | Purpose | Examples |
 | --- | --- | --- |
@@ -33,10 +40,17 @@ flowchart LR
     Clob --> CLOB["Public CLOB API"]
 ```
 
-## Install
+## Install and run
 
 ```bash
 pip install polymarket-mcp-server
+polymarket-mcp
+```
+
+Or run it ephemerally with `uvx`:
+
+```bash
+uvx --from polymarket-mcp-server polymarket-mcp
 ```
 
 For local development with PDM:
@@ -44,6 +58,21 @@ For local development with PDM:
 ```bash
 pdm install -G dev
 pdm install -G docs
+```
+
+## MCP client config
+
+Example stdio client entry using `uvx`:
+
+```json
+{
+  "mcpServers": {
+    "polymarket": {
+      "command": "uvx",
+      "args": ["--from", "polymarket-mcp-server", "polymarket-mcp"]
+    }
+  }
+}
 ```
 
 ## Quick start
@@ -62,6 +91,15 @@ Run the package directly:
 pdm run python -m polymarket_mcp.server
 ```
 
+## Useful commands
+
+```bash
+pdm run mcp-gamma-inspect
+pdm run mcp-data-inspect
+pdm run mcp-clob-inspect
+pdm run docs
+```
+
 ## Project layout
 
 ```text
@@ -76,13 +114,14 @@ docs/         Sphinx documentation
 
 ## Documentation
 
+- Docs site: <https://polymarket-mcp.readthedocs.io/en/latest/>
 - Docs source: `docs/`
 - Local build: `pdm run docs`
 - Local preview: `pdm run docs-serve`
-- Published docs target: Read the Docs via `.readthedocs.yaml`
 
 ## Development notes
 
 - Tool docstrings are written for LLM tool selection, not just human API reference.
 - `tests/test_mcp_e2e.py` now covers both in-process and subprocess MCP usage.
+- Releases publish from Git tags through GitHub Actions trusted publishing.
 - `pdm run mcp-dev` uses the FastMCP inspector flow; if the inspector package is not cached locally, the first run may need external package access.
