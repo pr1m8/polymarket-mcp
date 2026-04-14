@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
+    environment:
+      name: pypi
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -36,10 +39,7 @@ jobs:
         run: pdm build
 
       - name: Publish to PyPI
-        env:
-          PDM_PUBLISH_USERNAME: __token__
-          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: pdm publish --no-build
+        uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
