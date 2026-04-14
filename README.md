@@ -1,94 +1,49 @@
 # polymarket-mcp
 
-Typed FastMCP server for Polymarket:
+[![CI](https://github.com/pr1m8/polymarket-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/pr1m8/polymarket-mcp/actions/workflows/ci.yml)
+[![Release](https://github.com/pr1m8/polymarket-mcp/actions/workflows/release.yml/badge.svg)](https://github.com/pr1m8/polymarket-mcp/actions/workflows/release.yml)
+[![PyPI](https://img.shields.io/pypi/v/polymarket-mcp.svg)](https://pypi.org/project/polymarket-mcp/)
+[![Python](https://img.shields.io/pypi/pyversions/polymarket-mcp.svg)](https://pypi.org/project/polymarket-mcp/)
+[![Docs](https://readthedocs.org/projects/polymarket-mcp/badge/?version=latest)](https://polymarket-mcp.readthedocs.io/en/latest/)
 
-- Gamma discovery
-- Data API wallet and trade reads
-- Public CLOB order books, quotes, midpoint, spread, and price history
+Typed FastMCP server for Polymarket discovery, wallet analytics, and public CLOB market data.
 
-This version is intentionally **read-only**. It does **not** include authenticated trading tools yet.
+This package is intentionally read-only in `0.1.x`. It helps agents and MCP clients inspect markets, wallets, books, quotes, and history without exposing authenticated trading actions.
 
----
+## What you get
 
-## What this package is for
+| Surface | Purpose | Examples |
+| --- | --- | --- |
+| `gamma` | market and event discovery | topic search, event lookup, metadata |
+| `data` | wallet reads | positions, activity, trades |
+| `clob` | live public market state | books, quotes, midpoint, spread, history |
 
-Use this package when you want an LLM, MCP client, or agent runtime to:
-
-- discover Polymarket markets and events by topic
-- inspect a wallet's current or historical exposure
-- read public order books and market quotes
-- analyze price history for known token IDs
-
-This package is a good fit for:
-
-- FastMCP clients
-- Claude / Cursor MCP setups
-- LangChain MCP adapters
-- LangGraph workflows
-- internal research or analytics tools
-
----
-
-## Included domains
-
-The parent server mounts three child MCP servers:
-
-- `gamma`: market and event discovery
-- `data`: wallet positions, activity, and trades
-- `clob`: public order books, quotes, and history
-
----
-
-## Package layout
-
-```text
-.
-├── README.md
-├── docs/
-├── pyproject.toml
-├── src/
-│   └── polymarket_mcp/
-│       ├── __init__.py
-│       ├── errors.py
-│       ├── http.py
-│       ├── server.py
-│       ├── settings.py
-│       ├── models/
-│       ├── services/
-│       └── servers/
-└── tests/
+```mermaid
+flowchart LR
+    Client["MCP client / agent"] --> Server["polymarket_mcp.server"]
+    Server --> Gamma["gamma server"]
+    Server --> Data["data server"]
+    Server --> Clob["clob server"]
+    Gamma --> GAPI["Gamma API"]
+    Data --> DAPI["Data API"]
+    Clob --> CLOB["Public CLOB API"]
 ```
-
----
 
 ## Install
 
-Using PDM:
-
 ```bash
-pdm install -d
+pdm install -G dev
+pdm install -G docs
 ```
-
-If you also want docs dependencies:
-
-```bash
-pdm install -dG docs
-```
-
----
 
 ## Quick start
 
-Inspect the composed MCP server:
-
 ```bash
-pdm run mcp-inspect
-```
-
-Run the composed MCP server:
-
-```bash
-pdm run mcp-run
+pdm run mcp-inspect      # inspect the composed server surface
+pdm run mcp-run          # run the stdio MCP server
+pdm run test             # run the full pytest suite
+pdm run test-mcp         # run MCP client/server end-to-end tests
+pdm run all              # tests + docs + MCP inspect
 ```
 
 Run the package directly:
@@ -97,304 +52,27 @@ Run the package directly:
 pdm run python -m polymarket_mcp.server
 ```
 
----
-
-## PDM scripts
-
-### Test and docs
-
-```bash
-pdm run test
-pdm run test-cov
-pdm run docs
-pdm run docs-serve
-pdm run docs-clean
-```
-
-### Main MCP commands
-
-```bash
-pdm run mcp-inspect
-pdm run mcp-inspect-json
-pdm run mcp-inspect-mcp
-pdm run mcp-run
-pdm run mcp-dev
-```
-
-### Child server commands
-
-```bash
-pdm run mcp-gamma-inspect
-pdm run mcp-data-inspect
-pdm run mcp-clob-inspect
-
-pdm run mcp-gamma-run
-pdm run mcp-data-run
-pdm run mcp-clob-run
-```
-
-### Combined checks
-
-```bash
-pdm run check
-pdm run all
-```
-
----
-
-## What the main scripts do
-
-### `pdm run mcp-inspect`
-
-Inspects the composed parent FastMCP server and prints a human-readable summary of:
-
-- tools
-- resources
-- prompts
-- namespaces
-
-This is the best first sanity check.
-
-### `pdm run mcp-run`
-
-Runs the composed Polymarket MCP server.
-
-This is the main entrypoint for local development and client integration.
-
-### `pdm run mcp-dev`
-
-Runs the FastMCP development flow for the composed server, if supported by your installed FastMCP version.
-
-### `pdm run mcp-inspect-json`
-
-Emits a FastMCP-formatted JSON description of the server.
-
-### `pdm run mcp-inspect-mcp`
-
-Emits MCP-format JSON to `.artifacts/polymarket-mcp.json`.
-
-This is useful for tooling, manifests, and debugging MCP surfaces.
-
----
-
-## Child servers
-
-You can also inspect or run domain servers individually.
-
-### Gamma
-
-Use Gamma when you need:
-
-- market discovery
-- event discovery
-- tag, series, sports, or team metadata
-- exact market lookup by slug
-- exact event lookup by slug
-
-Examples:
-
-```bash
-pdm run mcp-gamma-inspect
-pdm run mcp-gamma-run
-```
-
-### Data
-
-Use Data when you need:
-
-- wallet positions
-- closed positions
-- wallet activity
-- trade history
-
-Examples:
-
-```bash
-pdm run mcp-data-inspect
-pdm run mcp-data-run
-```
-
-### CLOB public
-
-Use CLOB public when you need:
-
-- order books
-- price quotes
-- midpoint
-- spread
-- price history
-
-Examples:
-
-```bash
-pdm run mcp-clob-inspect
-pdm run mcp-clob-run
-```
-
----
-
-## Tool design philosophy
-
-Tool docstrings are intentionally written for **LLM tool selection**, not only for human developers.
-
-Each MCP tool should explain:
-
-- when to use it
-- when not to use it
-- what kind of identifier it expects
-- what the output is useful for
-- what likely follow-up tools come next
-
-This improves agent behavior substantially compared with minimal API-style docstrings.
-
----
-
-## Resources
-
-Canonical resources are exposed for stable objects such as:
-
-- market by slug
-- event by slug
-- wallet positions
-- wallet activity
-- order book by token ID
-- price by token ID
-
-If enabled in settings, resources are also exposed through generated tools via `ResourcesAsTools`, which is especially useful for tool-centric clients.
-
----
-
-## Suggested agent flow
-
-A good general-purpose Polymarket agent flow is:
-
-1. Use Gamma tools to discover relevant markets or events.
-2. Use exact Gamma lookup tools once a slug is known.
-3. Use CLOB public tools for live order books or quotes.
-4. Use Data tools for wallet-level analysis.
-
-Example reasoning flow:
+## Project layout
 
 ```text
-topic query
-→ gamma_search_public
-→ gamma_get_market_by_slug
-→ clob_get_book or clob_get_price
-→ final synthesis
+src/polymarket_mcp/
+  models/     typed domain and tool I/O models
+  services/   upstream normalization layers
+  servers/    FastMCP tool/resource surfaces
+  server.py   composed parent MCP server
+tests/        unit and MCP end-to-end coverage
+docs/         Sphinx documentation
 ```
-
-Wallet analysis flow:
-
-```text
-wallet address
-→ data_get_positions
-→ data_get_activity
-→ optional gamma or clob follow-up on referenced markets
-→ final synthesis
-```
-
----
-
-## Testing
-
-Run the full test suite:
-
-```bash
-pdm run test
-```
-
-Run with coverage:
-
-```bash
-pdm run test-cov
-```
-
----
 
 ## Documentation
 
-Build docs locally:
+- Docs source: `docs/`
+- Local build: `pdm run docs`
+- Local preview: `pdm run docs-serve`
+- Published docs target: Read the Docs via `.readthedocs.yaml`
 
-```bash
-pdm run docs
-```
+## Development notes
 
-Serve built docs locally:
-
-```bash
-pdm run docs-serve
-```
-
-This project also includes:
-
-- GitHub Actions CI
-- release workflow scaffolding
-- Read the Docs configuration
-- Sphinx docs scaffolding
-
----
-
-## Release workflow
-
-The project includes a release workflow intended for tag-based publishing.
-
-Before using it, wire up:
-
-- PyPI Trusted Publishing
-- your repository settings
-- your Read the Docs project
-
----
-
-## Environment and settings
-
-Settings are environment-backed through `pydantic-settings`.
-
-The package currently uses public Polymarket endpoints by default, including:
-
-- Gamma base URL
-- Data API base URL
-- CLOB base URL
-
-You can extend settings later for:
-
-- alternate environments
-- custom timeouts
-- tracing
-- debug logging
-- auth or trading support
-
----
-
-## Not included yet
-
-This first version intentionally does **not** include:
-
-- authenticated trading
-- order placement or cancellation
-- websocket streaming
-- remote proxy gateway composition
-- persistence or caching
-- advanced observability
-
-Those are good next steps once the read-only MCP surface is stable.
-
----
-
-## Next recommended improvements
-
-Good next additions include:
-
-- Ruff
-- pre-commit
-- structured logging
-- richer error modeling
-- authenticated trading server
-- websocket ingestion layer
-- FastAPI-hosted gateway wrapper
-
----
-
-## License
-
-Add your preferred license file before publishing.
+- Tool docstrings are written for LLM tool selection, not just human API reference.
+- `tests/test_mcp_e2e.py` now covers both in-process and subprocess MCP usage.
+- `pdm run mcp-dev` uses the FastMCP inspector flow; if the inspector package is not cached locally, the first run may need external package access.

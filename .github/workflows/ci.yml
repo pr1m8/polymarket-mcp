@@ -7,12 +7,8 @@ on:
   pull_request:
 
 jobs:
-  test:
+  test-and-docs:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.13"]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -20,19 +16,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.13"
 
       - name: Install PDM
         uses: pdm-project/setup-pdm@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.13"
           cache: true
 
       - name: Install dependencies
-        run: pdm install -G dev
+        run: pdm install -G dev -G docs
 
-      - name: Run tests
-        run: pdm run test
+      - name: Run validation suite
+        run: pdm run all
 
-      - name: Build docs
-        run: pdm install -G docs && pdm run docs
+      - name: Upload built docs artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docs-html
+          path: docs/_build/html

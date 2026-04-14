@@ -1,32 +1,62 @@
-# Usage
+# Getting started
 
 ## Install
 
+Install the development and documentation groups:
+
 ```bash
 pdm install -G dev
+pdm install -G docs
 ```
 
-## Run tests
+## Inspect the server
+
+Use the composed MCP inspector summary as the first sanity check:
 
 ```bash
-pdm run test
+pdm run mcp-inspect
 ```
 
-## Run the MCP server
+You should see a `polymarket` server exposing the namespaced Gamma, Data, and CLOB tools plus generated resource helpers.
+
+## Run the server
+
+Run the stdio server for local MCP clients:
+
+```bash
+pdm run mcp-run
+```
+
+Or run the package entrypoint directly:
 
 ```bash
 pdm run python -m polymarket_mcp.server
 ```
 
-## Run docs locally
+## Validate the project
 
 ```bash
-pdm install -G docs
-pdm run docs
+pdm run test
+pdm run test-mcp
+pdm run check
+pdm run all
 ```
 
-## FastMCP CLI
+- `test` runs the full pytest suite.
+- `test-mcp` focuses on MCP client/server flows.
+- `check` runs tests and inspects the server.
+- `all` runs tests, docs, and MCP inspection.
+
+## Domain-specific servers
+
+You can inspect or run the child servers independently:
 
 ```bash
-fastmcp run src/polymarket_mcp/server.py:mcp
+pdm run mcp-gamma-inspect
+pdm run mcp-data-inspect
+pdm run mcp-clob-inspect
+
+pdm run mcp-gamma-run
+pdm run mcp-data-run
+pdm run mcp-clob-run
 ```

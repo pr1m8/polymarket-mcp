@@ -1,26 +1,28 @@
-# polymarket-mcp
+# polymarket-mcp documentation
 
-`polymarket-mcp` is a typed FastMCP package for Polymarket discovery, wallet
-analytics, and public CLOB market data.
+`polymarket-mcp` exposes a typed FastMCP surface over Polymarket discovery, wallet reads, and public CLOB market data.
+
+## Why this package exists
+
+- Normalize volatile upstream JSON into stable typed models.
+- Present Polymarket as clear MCP tools and resources.
+- Keep discovery, wallet, and order book concerns separated but composable.
+- Make tool descriptions useful for LLM routing, not just humans.
 
 ## Included surfaces
 
-- Gamma discovery
-- Data API wallet positions, activity, and trades
-- Public CLOB order books, quotes, midpoint, spread, and history
-
-## Project goals
-
-- typed models instead of raw JSON everywhere
-- MCP tool docstrings that guide LLM tool selection
-- clean separation between models, services, and MCP server modules
-- a parent FastMCP server composed from focused child servers
-
-## Contents
+| Namespace | Focus | Typical follow-up |
+| --- | --- | --- |
+| `gamma` | find markets and events | inspect one market or event |
+| `data` | inspect wallet state and history | summarize positions or trades |
+| `clob` | read live books, quotes, and history | compare pricing and liquidity |
 
 ```{toctree}
 :maxdepth: 2
+:caption: Guides
 
 usage
+architecture
+development
 api
 ```

@@ -4,13 +4,13 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 
 jobs:
-  publish:
+  build-and-publish:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
-      contents: read
+      contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -26,11 +26,24 @@ jobs:
           python-version: "3.13"
           cache: true
 
-      - name: Install build dependencies
-        run: pdm install
+      - name: Install dependencies
+        run: pdm install -G dev
+
+      - name: Run test suite
+        run: pdm run test
 
       - name: Build distributions
         run: pdm build
 
       - name: Publish to PyPI
-        run: pdm publish
+        env:
+          PDM_PUBLISH_USERNAME: __token__
+          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: pdm publish --no-build
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*
+          generate_release_notes: true
