@@ -24,6 +24,9 @@ jobs:
           python-version: "3.13"
           cache: true
 
+      - name: Refresh lockfile for CI
+        run: pdm lock --update-reuse
+
       - name: Install dependencies
         run: pdm install -G dev -G docs
 
