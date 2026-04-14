@@ -40,15 +40,33 @@ package-dir = "src"
 includes = ["src/polymarket_mcp"]
 
 [tool.pytest.ini_options]
-pythonpath = [
-  "src",
-]
+pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = "-q"
 
 [tool.pdm.scripts]
 test = "pytest"
+test-cov = "pytest --cov=src/polymarket_mcp --cov-report=term-missing"
 docs = "sphinx-build -b html docs docs/_build/html"
+docs-clean = "python -c \"import shutil; shutil.rmtree('docs/_build', ignore_errors=True)\""
+docs-serve = "python -m http.server 8000 -d docs/_build/html"
+
+mcp-run = "fastmcp run src/polymarket_mcp/server.py:mcp"
+mcp-dev = "fastmcp dev src/polymarket_mcp/server.py:mcp"
+mcp-inspect = "fastmcp inspect src/polymarket_mcp/server.py:mcp"
+mcp-inspect-json = "fastmcp inspect src/polymarket_mcp/server.py:mcp --format fastmcp"
+mcp-inspect-mcp = "fastmcp inspect src/polymarket_mcp/server.py:mcp --format mcp -o .artifacts/polymarket-mcp.json"
+
+mcp-gamma-run = "fastmcp run src/polymarket_mcp/servers/gamma_server.py:mcp"
+mcp-data-run = "fastmcp run src/polymarket_mcp/servers/data_server.py:mcp"
+mcp-clob-run = "fastmcp run src/polymarket_mcp/servers/clob_public_server.py:mcp"
+
+mcp-gamma-inspect = "fastmcp inspect src/polymarket_mcp/servers/gamma_server.py:mcp"
+mcp-data-inspect = "fastmcp inspect src/polymarket_mcp/servers/data_server.py:mcp"
+mcp-clob-inspect = "fastmcp inspect src/polymarket_mcp/servers/clob_public_server.py:mcp"
+
+check = { composite = ["test", "mcp-inspect"] }
+all = { composite = ["test", "docs", "mcp-inspect"] }
 
 [tool.coverage.run]
 source = ["src/polymarket_mcp"]

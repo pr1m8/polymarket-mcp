@@ -6,39 +6,45 @@ Typed FastMCP server for Polymarket:
 - Data API wallet and trade reads
 - Public CLOB order books, quotes, midpoint, spread, and price history
 
-This first version is **read-only**. It does **not** include authenticated
-trading tools yet.
+This version is intentionally **read-only**. It does **not** include authenticated trading tools yet.
 
-## What this server is for
+---
 
-Use this MCP package when you want an LLM or agent to:
+## What this package is for
+
+Use this package when you want an LLM, MCP client, or agent runtime to:
 
 - discover Polymarket markets and events by topic
-- inspect a wallet's current and historical exposure
-- read public order books, quotes, midpoint, spread, and price history
+- inspect a wallet's current or historical exposure
+- read public order books and market quotes
+- analyze price history for known token IDs
 
-## Architecture
+This package is a good fit for:
 
-The package uses a layered structure:
+- FastMCP clients
+- Claude / Cursor MCP setups
+- LangChain MCP adapters
+- LangGraph workflows
+- internal research or analytics tools
 
-1. `models/` defines typed domain models and MCP input/output contracts.
-2. `services/` normalizes raw upstream payloads into stable Python models.
-3. `servers/` exposes those services through FastMCP tools and resources.
-4. `server.py` composes the child servers into one parent MCP entrypoint.
+---
 
-## Namespaces
+## Included domains
 
 The parent server mounts three child MCP servers:
 
-- `gamma`: discovery and catalog-style lookups
-- `data`: wallet positions, activity, and trade history
-- `clob`: public order book and pricing reads
+- `gamma`: market and event discovery
+- `data`: wallet positions, activity, and trades
+- `clob`: public order books, quotes, and history
+
+---
 
 ## Package layout
 
 ```text
-polymarket_mcp/
+.
 ├── README.md
+├── docs/
 ├── pyproject.toml
 ├── src/
 │   └── polymarket_mcp/
@@ -51,121 +57,344 @@ polymarket_mcp/
 │       ├── services/
 │       └── servers/
 └── tests/
-    ├── conftest.py
-    ├── helpers/
-    └── test_*.py
 ```
 
-## Install with PDM
+---
+
+## Install
+
+Using PDM:
 
 ```bash
 pdm install -d
 ```
 
-## Run tests
+If you also want docs dependencies:
 
 ```bash
-pdm run pytest
+pdm install -dG docs
 ```
 
-## Run the MCP server
+---
+
+## Quick start
+
+Inspect the composed MCP server:
 
 ```bash
-pdm run polymarket-mcp
+pdm run mcp-inspect
 ```
 
-or:
+Run the composed MCP server:
+
+```bash
+pdm run mcp-run
+```
+
+Run the package directly:
 
 ```bash
 pdm run python -m polymarket_mcp.server
 ```
 
-## Configuration
+---
 
-Settings are environment-backed with the `POLYMARKET_MCP_` prefix.
+## PDM scripts
+
+### Test and docs
+
+```bash
+pdm run test
+pdm run test-cov
+pdm run docs
+pdm run docs-serve
+pdm run docs-clean
+```
+
+### Main MCP commands
+
+```bash
+pdm run mcp-inspect
+pdm run mcp-inspect-json
+pdm run mcp-inspect-mcp
+pdm run mcp-run
+pdm run mcp-dev
+```
+
+### Child server commands
+
+```bash
+pdm run mcp-gamma-inspect
+pdm run mcp-data-inspect
+pdm run mcp-clob-inspect
+
+pdm run mcp-gamma-run
+pdm run mcp-data-run
+pdm run mcp-clob-run
+```
+
+### Combined checks
+
+```bash
+pdm run check
+pdm run all
+```
+
+---
+
+## What the main scripts do
+
+### `pdm run mcp-inspect`
+
+Inspects the composed parent FastMCP server and prints a human-readable summary of:
+
+- tools
+- resources
+- prompts
+- namespaces
+
+This is the best first sanity check.
+
+### `pdm run mcp-run`
+
+Runs the composed Polymarket MCP server.
+
+This is the main entrypoint for local development and client integration.
+
+### `pdm run mcp-dev`
+
+Runs the FastMCP development flow for the composed server, if supported by your installed FastMCP version.
+
+### `pdm run mcp-inspect-json`
+
+Emits a FastMCP-formatted JSON description of the server.
+
+### `pdm run mcp-inspect-mcp`
+
+Emits MCP-format JSON to `.artifacts/polymarket-mcp.json`.
+
+This is useful for tooling, manifests, and debugging MCP surfaces.
+
+---
+
+## Child servers
+
+You can also inspect or run domain servers individually.
+
+### Gamma
+
+Use Gamma when you need:
+
+- market discovery
+- event discovery
+- tag, series, sports, or team metadata
+- exact market lookup by slug
+- exact event lookup by slug
 
 Examples:
 
 ```bash
-export POLYMARKET_MCP_REQUEST_TIMEOUT_SECONDS=10
-export POLYMARKET_MCP_ENABLE_RESOURCES_AS_TOOLS=true
+pdm run mcp-gamma-inspect
+pdm run mcp-gamma-run
 ```
 
-Supported settings include:
+### Data
 
-- `POLYMARKET_MCP_GAMMA_BASE_URL`
-- `POLYMARKET_MCP_DATA_BASE_URL`
-- `POLYMARKET_MCP_CLOB_BASE_URL`
-- `POLYMARKET_MCP_REQUEST_TIMEOUT_SECONDS`
-- `POLYMARKET_MCP_ENABLE_RESOURCES_AS_TOOLS`
-- `POLYMARKET_MCP_USER_AGENT`
+Use Data when you need:
 
-## Tool docstring philosophy
+- wallet positions
+- closed positions
+- wallet activity
+- trade history
 
-Tool docstrings are intentionally written for MCP tool selection.
+Examples:
 
-Each tool should explain:
+```bash
+pdm run mcp-data-inspect
+pdm run mcp-data-run
+```
+
+### CLOB public
+
+Use CLOB public when you need:
+
+- order books
+- price quotes
+- midpoint
+- spread
+- price history
+
+Examples:
+
+```bash
+pdm run mcp-clob-inspect
+pdm run mcp-clob-run
+```
+
+---
+
+## Tool design philosophy
+
+Tool docstrings are intentionally written for **LLM tool selection**, not only for human developers.
+
+Each MCP tool should explain:
 
 - when to use it
 - when not to use it
 - what kind of identifier it expects
-- what the result is useful for
-- which follow-up tools are commonly helpful
+- what the output is useful for
+- what likely follow-up tools come next
 
-This improves agent behavior compared with plain developer-only docstrings.
+This improves agent behavior substantially compared with minimal API-style docstrings.
+
+---
 
 ## Resources
 
-Canonical resources are provided for stable objects such as:
+Canonical resources are exposed for stable objects such as:
 
 - market by slug
 - event by slug
 - wallet positions
 - wallet activity
-- book by token
-- price by token
+- order book by token ID
+- price by token ID
 
-If enabled in settings, resources are also exposed as generated tools through
-`ResourcesAsTools`, which is useful for tool-centric agent clients.
+If enabled in settings, resources are also exposed through generated tools via `ResourcesAsTools`, which is especially useful for tool-centric clients.
 
-## Suggested first agent flow
+---
 
-1. Use `gamma_search_public` or `gamma_list_events` to find relevant markets.
-2. Use `gamma_get_market_by_slug` for exact market detail.
-3. Use `clob_get_book` or `clob_get_price` for live market state.
-4. Use `data_get_positions` or `data_get_activity` for wallet analysis.
+## Suggested agent flow
+
+A good general-purpose Polymarket agent flow is:
+
+1. Use Gamma tools to discover relevant markets or events.
+2. Use exact Gamma lookup tools once a slug is known.
+3. Use CLOB public tools for live order books or quotes.
+4. Use Data tools for wallet-level analysis.
+
+Example reasoning flow:
+
+```text
+topic query
+→ gamma_search_public
+→ gamma_get_market_by_slug
+→ clob_get_book or clob_get_price
+→ final synthesis
+```
+
+Wallet analysis flow:
+
+```text
+wallet address
+→ data_get_positions
+→ data_get_activity
+→ optional gamma or clob follow-up on referenced markets
+→ final synthesis
+```
+
+---
+
+## Testing
+
+Run the full test suite:
+
+```bash
+pdm run test
+```
+
+Run with coverage:
+
+```bash
+pdm run test-cov
+```
+
+---
+
+## Documentation
+
+Build docs locally:
+
+```bash
+pdm run docs
+```
+
+Serve built docs locally:
+
+```bash
+pdm run docs-serve
+```
+
+This project also includes:
+
+- GitHub Actions CI
+- release workflow scaffolding
+- Read the Docs configuration
+- Sphinx docs scaffolding
+
+---
+
+## Release workflow
+
+The project includes a release workflow intended for tag-based publishing.
+
+Before using it, wire up:
+
+- PyPI Trusted Publishing
+- your repository settings
+- your Read the Docs project
+
+---
+
+## Environment and settings
+
+Settings are environment-backed through `pydantic-settings`.
+
+The package currently uses public Polymarket endpoints by default, including:
+
+- Gamma base URL
+- Data API base URL
+- CLOB base URL
+
+You can extend settings later for:
+
+- alternate environments
+- custom timeouts
+- tracing
+- debug logging
+- auth or trading support
+
+---
 
 ## Not included yet
 
-This first version intentionally does not include:
+This first version intentionally does **not** include:
 
 - authenticated trading
 - order placement or cancellation
 - websocket streaming
-- remote proxy gateway behavior
+- remote proxy gateway composition
+- persistence or caching
+- advanced observability
 
-Those can be added later as a separate trading server or gateway layer.
+Those are good next steps once the read-only MCP surface is stable.
 
+---
 
-## CI, releases, and docs
+## Next recommended improvements
 
-This project now includes:
+Good next additions include:
 
-- GitHub Actions CI in `.github/workflows/ci.yml`
-- tag-based release publishing in `.github/workflows/release.yml`
-- Read the Docs configuration in `.readthedocs.yaml`
-- Sphinx documentation under `docs/`
+- Ruff
+- pre-commit
+- structured logging
+- richer error modeling
+- authenticated trading server
+- websocket ingestion layer
+- FastAPI-hosted gateway wrapper
 
-### Suggested release flow
+---
 
-1. Push changes to a branch and open a pull request.
-2. Let CI run tests and docs builds.
-3. Merge to `main`.
-4. Tag a version like `v0.1.0`.
-5. Push the tag to trigger the publish workflow.
+## License
 
-### Trusted publishing note
-
-The release workflow is set up to use PyPI trusted publishing. You should wire
-this repository into PyPI as a trusted publisher before relying on the publish
-step.
+Add your preferred license file before publishing.
