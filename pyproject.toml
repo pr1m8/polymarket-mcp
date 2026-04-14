@@ -46,8 +46,9 @@ addopts = "-q"
 
 [tool.pdm.scripts]
 test = "pytest"
+test-mcp = "pytest tests/test_mcp_e2e.py"
 test-cov = "pytest --cov=src/polymarket_mcp --cov-report=term-missing"
-docs = "sphinx-build -b html docs docs/_build/html"
+docs = "env LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 sphinx-build -b html docs docs/_build/html"
 docs-clean = "python -c \"import shutil; shutil.rmtree('docs/_build', ignore_errors=True)\""
 docs-serve = "python -m http.server 8000 -d docs/_build/html"
 
