@@ -2,10 +2,30 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+
+# Test and coverage output
 .pytest_cache/
+.coverage
+htmlcov/
+
+# Local environments
 .venv/
 .pdm-python
 .pdm-build/
+
+# Build artifacts
 dist/
 build/
 *.egg-info/
+docs/_build/
+
+# Tooling caches and local scratch space
+.mypy_cache/
+.ruff_cache/
+.artifacts/
+.history/
+
+# Editor and OS clutter
+.DS_Store
+.idea/
+.vscode/
