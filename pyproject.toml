@@ -53,7 +53,7 @@ docs-clean = "python -c \"import shutil; shutil.rmtree('docs/_build', ignore_err
 docs-serve = "python -m http.server 8000 -d docs/_build/html"
 
 mcp-run = "fastmcp run src/polymarket_mcp/server.py:mcp"
-mcp-dev = "fastmcp dev src/polymarket_mcp/server.py:mcp"
+mcp-dev = "fastmcp dev inspector src/polymarket_mcp/server.py:mcp"
 mcp-inspect = "fastmcp inspect src/polymarket_mcp/server.py:mcp"
 mcp-inspect-json = "fastmcp inspect src/polymarket_mcp/server.py:mcp --format fastmcp"
 mcp-inspect-mcp = "fastmcp inspect src/polymarket_mcp/server.py:mcp --format mcp -o .artifacts/polymarket-mcp.json"
