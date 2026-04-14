@@ -1,5 +1,5 @@
 [project]
-name = "polymarket-mcp"
+name = "polymarket-mcp-server"
 version = "0.1.0"
 description = "Typed FastMCP server for Polymarket discovery, wallet reads, and public CLOB market data."
 readme = "README.md"

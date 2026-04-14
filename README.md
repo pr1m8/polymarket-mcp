@@ -2,13 +2,17 @@
 
 [![CI](https://github.com/pr1m8/polymarket-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/pr1m8/polymarket-mcp/actions/workflows/ci.yml)
 [![Release](https://github.com/pr1m8/polymarket-mcp/actions/workflows/release.yml/badge.svg)](https://github.com/pr1m8/polymarket-mcp/actions/workflows/release.yml)
-[![PyPI](https://img.shields.io/pypi/v/polymarket-mcp.svg)](https://pypi.org/project/polymarket-mcp/)
-[![Python](https://img.shields.io/pypi/pyversions/polymarket-mcp.svg)](https://pypi.org/project/polymarket-mcp/)
+[![PyPI](https://img.shields.io/pypi/v/polymarket-mcp-server.svg)](https://pypi.org/project/polymarket-mcp-server/)
+[![Python](https://img.shields.io/pypi/pyversions/polymarket-mcp-server.svg)](https://pypi.org/project/polymarket-mcp-server/)
 [![Docs](https://readthedocs.org/projects/polymarket-mcp/badge/?version=latest)](https://polymarket-mcp.readthedocs.io/en/latest/)
 
 Typed FastMCP server for Polymarket discovery, wallet analytics, and public CLOB market data.
 
 This package is intentionally read-only in `0.1.x`. It helps agents and MCP clients inspect markets, wallets, books, quotes, and history without exposing authenticated trading actions.
+
+PyPI distribution: `polymarket-mcp-server`  
+Python package: `polymarket_mcp`  
+CLI command: `polymarket-mcp`
 
 ## What you get
 
@@ -30,6 +34,12 @@ flowchart LR
 ```
 
 ## Install
+
+```bash
+pip install polymarket-mcp-server
+```
+
+For local development with PDM:
 
 ```bash
 pdm install -G dev
