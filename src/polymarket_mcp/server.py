@@ -90,9 +90,9 @@ def create_server(settings: AppSettings | None = None) -> FastMCP:
         mask_error_details=True,
     )
 
-    server.mount(gamma_server, prefix="gamma")
-    server.mount(data_server, prefix="data")
-    server.mount(clob_public_server, prefix="clob")
+    server.mount(gamma_server, namespace="gamma")
+    server.mount(data_server, namespace="data")
+    server.mount(clob_public_server, namespace="clob")
 
     if resolved_settings.enable_resources_as_tools:
         server.add_transform(ResourcesAsTools(server))
