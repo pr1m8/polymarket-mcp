@@ -1,0 +1,59 @@
+[project]
+name = "polymarket-mcp"
+version = "0.1.0"
+description = "Typed FastMCP server for Polymarket discovery, wallet reads, and public CLOB market data."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [
+  { name = "OpenAI" }
+]
+dependencies = [
+  "fastmcp>=2.0.0",
+  "httpx>=0.28.0",
+  "pydantic>=2.11.0",
+  "pydantic-settings>=2.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+docs = [
+  "sphinx>=8.0.0",
+  "furo>=2024.8.6",
+  "myst-parser>=4.0.0",
+  "sphinx-autodoc-typehints>=2.5.0",
+]
+
+[project.scripts]
+polymarket-mcp = "polymarket_mcp.server:main"
+
+[build-system]
+requires = ["pdm-backend>=2.4.0"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.build]
+package-dir = "src"
+includes = ["src/polymarket_mcp"]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src",
+]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.pdm.scripts]
+test = "pytest"
+docs = "sphinx-build -b html docs docs/_build/html"
+
+[tool.coverage.run]
+source = ["src/polymarket_mcp"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
