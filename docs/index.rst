@@ -1,8 +1,8 @@
 polymarket-mcp documentation
 ============================
 
-``polymarket-mcp`` exposes a typed FastMCP surface over Polymarket discovery,
-wallet reads, and public CLOB market data.
+``polymarket-mcp`` exposes an AI-agent ready FastMCP surface over Polymarket
+discovery, wallet reads, and public CLOB market data.
 
 At a glance
 -----------
