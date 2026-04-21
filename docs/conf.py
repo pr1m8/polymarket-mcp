@@ -26,7 +26,6 @@ release = __version__
 html_title = "polymarket-mcp documentation"
 
 extensions = [
-    "myst_parser",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
@@ -35,6 +34,10 @@ extensions = [
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+root_doc = "index"
+source_suffix = {
+    ".rst": "restructuredtext",
+}
 
 html_theme = "furo"
 html_static_path = ["_static"]
@@ -46,10 +49,9 @@ html_theme_options = {
     "navigation_with_keys": True,
 }
 
-myst_heading_anchors = 3
-myst_enable_extensions = ["colon_fence", "deflist"]
 napoleon_google_docstring = True
 napoleon_numpy_docstring = False
+napoleon_use_ivar = True
 autodoc_member_order = "bysource"
 autodoc_typehints = "description"
 suppress_warnings = ["sphinx_autodoc_typehints.forward_reference"]

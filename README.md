@@ -115,7 +115,7 @@ docs/         Sphinx documentation
 ## Documentation
 
 - Docs site: <https://polymarket-mcp.readthedocs.io/en/latest/>
-- Docs source: `docs/`
+- Docs source: `docs/` (Sphinx with native reStructuredText pages)
 - Local build: `pdm run docs`
 - Local preview: `pdm run docs-serve`
 

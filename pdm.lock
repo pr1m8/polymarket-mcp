@@ -5,7 +5,7 @@
 groups = ["default", "dev", "docs"]
 strategy = []
 lock_version = "4.5.0"
-content_hash = "sha256:99c7c6106e46096866092deb88cccc505a1e14b739796bdfa6b1b8c8c980a91a"
+content_hash = "sha256:6f07e859a14b02fc718fc477aea5c872efe21faf01c4c108bad714859547c39d"
 
 [[metadata.targets]]
 requires_python = ">=3.13"
@@ -745,18 +745,6 @@ files = [
 ]
 
 [[package]]
-name = "mdit-py-plugins"
-version = "0.5.0"
-summary = ""
-dependencies = [
-    "markdown-it-py",
-]
-files = [
-    {file = "mdit_py_plugins-0.5.0-py3-none-any.whl", hash = "sha256:07a08422fc1936a5d26d146759e9155ea466e842f5ab2f7d2266dd084c8dab1f"},
-    {file = "mdit_py_plugins-0.5.0.tar.gz", hash = "sha256:f4918cb50119f50446560513a8e311d574ff6aaed72606ddae6d35716fe809c6"},
-]
-
-[[package]]
 name = "mdurl"
 version = "0.1.2"
 summary = ""
@@ -772,23 +760,6 @@ summary = ""
 files = [
     {file = "more_itertools-11.0.2-py3-none-any.whl", hash = "sha256:6e35b35f818b01f691643c6c611bc0902f2e92b46c18fffa77ae1e7c46e912e4"},
     {file = "more_itertools-11.0.2.tar.gz", hash = "sha256:392a9e1e362cbc106a2457d37cabf9b36e5e12efd4ebff1654630e76597df804"},
-]
-
-[[package]]
-name = "myst-parser"
-version = "5.0.0"
-summary = ""
-dependencies = [
-    "docutils",
-    "jinja2",
-    "markdown-it-py",
-    "mdit-py-plugins",
-    "pyyaml",
-    "sphinx",
-]
-files = [
-    {file = "myst_parser-5.0.0-py3-none-any.whl", hash = "sha256:ab31e516024918296e169139072b81592336f2fef55b8986aa31c9f04b5f7211"},
-    {file = "myst_parser-5.0.0.tar.gz", hash = "sha256:f6f231452c56e8baa662cc352c548158f6a16fcbd6e3800fc594978002b94f3a"},
 ]
 
 [[package]]
