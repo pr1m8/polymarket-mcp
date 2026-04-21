@@ -60,7 +60,7 @@ class AppSettings(BaseSettings):
     clob_base_url: str = "https://clob.polymarket.com"
     request_timeout_seconds: float = Field(default=20.0, gt=0)
     enable_resources_as_tools: bool = True
-    user_agent: str = "polymarket-mcp/0.1.2"
+    user_agent: str = "polymarket-mcp/0.1.3"
 
 
 @lru_cache(maxsize=1)

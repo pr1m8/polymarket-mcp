@@ -16,8 +16,8 @@ Create and publish a release from a Git tag:
 .. code-block:: bash
 
    git push origin main
-   git tag -a v0.1.2 -m "Release v0.1.2"
-   git push origin refs/tags/v0.1.2
+   git tag -a v0.1.3 -m "Release v0.1.3"
+   git push origin refs/tags/v0.1.3
 
 The GitHub Actions release workflow then:
 
